@@ -1,0 +1,31 @@
+{
+  "name": "finach-backend",
+  "version": "0.1.0",
+  "description": "Site de controle financeiro criado por Mayza Alvarenga e Dennis S Jacintho",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MayzaAlv/financh.git"
+  },
+  "author": "Mayza Alvarenga & Dennis S Jacintho",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/MayzaAlv/issues"
+  },
+  "homepage": "https://github.com/MayzaAlv#readme",
+  "dependencies": {
+    "next": "12.1.6",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
+  },
+  "devDependencies": {
+    "eslint": "8.15.0",
+    "eslint-config-next": "12.1.6"
+  }
+}
