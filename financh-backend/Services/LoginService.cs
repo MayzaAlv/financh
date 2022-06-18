@@ -31,5 +31,35 @@ namespace financh_backend.Services
             }
             return Result.Fail("Login falhou");
         }
+
+        public Result SolicitarResetSenha(SolicitarSenhaResetRequest request)
+        {
+           IdentityUser<int> identityUser = ProcurarEmail(request.Email);
+           if(identityUser != null)
+           {
+                string codigoRecuperacao = _signInManager.UserManager
+                    .GeneratePasswordResetTokenAsync(identityUser).Result;
+                return Result.Ok().WithSuccess(codigoRecuperacao);
+            }
+            return Result.Fail("Falha na solicitação de redefinir senha");
+        }
+
+        internal Result ResetSenha(ResetSenhaRequest request)
+        {
+            IdentityUser<int> identityUser = ProcurarEmail(request.Email);
+            IdentityResult resultadoIdentity = _signInManager.UserManager
+                 .ResetPasswordAsync(identityUser, request.Token, request.Password).Result;
+            if (resultadoIdentity.Succeeded)
+            {
+                return Result.Ok();
+            }
+            return Result.Fail("Falha ao resetar a senha");
+        }
+
+        public IdentityUser<int> ProcurarEmail(string email)
+        {
+            return _signInManager.UserManager.Users
+                .FirstOrDefault(usuario => usuario.NormalizedEmail == email.ToUpper());
+        }
     }
 }

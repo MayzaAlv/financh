@@ -12,12 +12,16 @@ builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseMySql(mySqlConnection,
                       ServerVersion.AutoDetect(mySqlConnection)));
 
-builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>()
-                .AddEntityFrameworkStores<UserDbContext>();
-
+builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(opt =>
+                 {
+                    opt.SignIn.RequireConfirmedEmail = true;
+                })
+                .AddEntityFrameworkStores<UserDbContext>()
+                .AddDefaultTokenProviders();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<CadastroService, CadastroService>();
+builder.Services.AddScoped<EmailService, EmailService>();
 builder.Services.AddScoped<LoginService, LoginService>();
 builder.Services.AddScoped<LogoutService, LogoutService>(); 
 builder.Services.AddScoped<TokenService, TokenService>();

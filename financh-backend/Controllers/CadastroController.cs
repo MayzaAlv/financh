@@ -1,4 +1,5 @@
 ﻿using financh_backend.Data.Dtos;
+using financh_backend.Data.Requests;
 using financh_backend.Models;
 using financh_backend.Services;
 using FluentResults;
@@ -22,6 +23,17 @@ namespace financh_backend.Controllers
         {
             Result resultado = _cadastroService.CadastrarUsuario(createDto);
             if (resultado.IsFailed) {
+                return StatusCode(500);
+            }
+            return Ok(resultado.Successes.ToList()[0].Message);
+        }
+
+        [HttpGet("/Ativar")]
+        public IActionResult AtivarConta([FromQuery] AtivarContaRequest request)
+        {
+            Result resultado = _cadastroService.AtivarConta(request);
+            if (resultado.IsFailed)
+            {
                 return StatusCode(500);
             }
             return Ok();
