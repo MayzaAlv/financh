@@ -9,7 +9,7 @@ namespace financh_backend.Services
 {
     public class TokenService
     {
-        public Token CreateToken(IdentityUser<int> usuario)
+        public Token CreateToken(CustomIdentityUser usuario)
         {
             Claim[] direitosUsuario = new Claim[]
             {

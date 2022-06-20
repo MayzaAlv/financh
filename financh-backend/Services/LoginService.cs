@@ -7,10 +7,10 @@ namespace financh_backend.Services
 {
     public class LoginService
     {
-        private SignInManager<IdentityUser<int>> _signInManager;
+        private SignInManager<CustomIdentityUser> _signInManager;
         private TokenService _tokenService;
 
-        public LoginService(SignInManager<IdentityUser<int>> signInManager, TokenService tokenService)
+        public LoginService(SignInManager<CustomIdentityUser> signInManager, TokenService tokenService)
         {
             _signInManager = signInManager;
             _tokenService = tokenService;
@@ -34,7 +34,7 @@ namespace financh_backend.Services
 
         public Result SolicitarResetSenha(SolicitarSenhaResetRequest request)
         {
-           IdentityUser<int> identityUser = ProcurarEmail(request.Email);
+           CustomIdentityUser identityUser = ProcurarEmail(request.Email);
            if(identityUser != null)
            {
                 string codigoRecuperacao = _signInManager.UserManager
@@ -46,7 +46,7 @@ namespace financh_backend.Services
 
         internal Result ResetSenha(ResetSenhaRequest request)
         {
-            IdentityUser<int> identityUser = ProcurarEmail(request.Email);
+            CustomIdentityUser identityUser = ProcurarEmail(request.Email);
             IdentityResult resultadoIdentity = _signInManager.UserManager
                  .ResetPasswordAsync(identityUser, request.Token, request.Password).Result;
             if (resultadoIdentity.Succeeded)
@@ -56,7 +56,7 @@ namespace financh_backend.Services
             return Result.Fail("Falha ao resetar a senha");
         }
 
-        public IdentityUser<int> ProcurarEmail(string email)
+        public CustomIdentityUser ProcurarEmail(string email)
         {
             return _signInManager.UserManager.Users
                 .FirstOrDefault(usuario => usuario.NormalizedEmail == email.ToUpper());

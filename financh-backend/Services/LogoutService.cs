@@ -1,13 +1,14 @@
-﻿using FluentResults;
+﻿using financh_backend.Models;
+using FluentResults;
 using Microsoft.AspNetCore.Identity;
 
 namespace financh_backend.Services
 {
     public class LogoutService
     {
-        private SignInManager<IdentityUser<int>> _singInManager;
+        private SignInManager<CustomIdentityUser> _singInManager;
 
-        public LogoutService(SignInManager<IdentityUser<int>> singInManager)
+        public LogoutService(SignInManager<CustomIdentityUser> singInManager)
         {
             _singInManager = singInManager;
         }

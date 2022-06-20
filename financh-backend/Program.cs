@@ -1,4 +1,5 @@
-using financh_backend.Data;
+    using financh_backend.Data;
+using financh_backend.Models;
 using financh_backend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseMySql(mySqlConnection,
                       ServerVersion.AutoDetect(mySqlConnection)));
 
-builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(opt =>
+builder.Services.AddIdentity<CustomIdentityUser, IdentityRole<int>>(opt =>
                  {
                     opt.SignIn.RequireConfirmedEmail = true;
                 })
