@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace Operacoes.Controllers
 {
     [ApiController]
-    [Route("api/v1/financh/gasto")]
+    [Route("api/v1/financh/gastos")]
     public class GastoController : ControllerBase
     {
         GastoService _gastoService;
@@ -25,7 +25,16 @@ namespace Operacoes.Controllers
         {
             string token = this.HttpContext.Request.Headers["Authorization"];
             int usuarioId = ResgatarIdToken(token);
-            GastoDto readGasto = _gastoService.AdicionarGasto(gastoDto, usuarioId);
+            GastoIdDto readGasto = _gastoService.AdicionarGasto(gastoDto, usuarioId);
+
+            return CreatedAtAction(nameof(GastoPorId), new { Id = readGasto.Id }, readGasto);
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public IActionResult GastoPorId(int id)
+        {
+            GastoIdDto readGasto = _gastoService.GastoPorId(id);
 
             return Ok(readGasto);
         }
@@ -37,7 +46,7 @@ namespace Operacoes.Controllers
             string token = this.HttpContext.Request.Headers["Authorization"];
             int usuarioId = ResgatarIdToken(token);
 
-            List<GastoDto> gastoDto = _gastoService.MostrarGastoAtual(usuarioId);
+            GastoDto gastoDto = _gastoService.MostrarGastoAtual(usuarioId);
             if (gastoDto == null)
             {
                 throw new Exception("Falha na procura");
@@ -45,14 +54,14 @@ namespace Operacoes.Controllers
             return Ok(gastoDto);
         }
 
-        [HttpGet("gastos")]
+        [HttpGet("{mes}/{ano}")]
         [Authorize]
-        public IActionResult MostrarGasto(string mes)
+        public IActionResult MostrarGastoMes(int mes, int ano)
         {
             string token = this.HttpContext.Request.Headers["Authorization"];
             int usuarioId = ResgatarIdToken(token);
             
-            List<GastoDto> gastoDto = _gastoService.MostrarGastoMes(usuarioId, int.Parse(mes));
+            GastoDto gastoDto = _gastoService.MostrarGastoMes(usuarioId, mes, ano);
             if(gastoDto == null)
             {
                 throw new Exception("Falha na procura");
@@ -60,7 +69,7 @@ namespace Operacoes.Controllers
             return Ok(gastoDto);
         }
 
-        [HttpPut("gasto")]
+        [HttpPut("{id}")]
         [Authorize]
         public IActionResult AtualizarGasto(int id, [FromBody] GastoDto gastoDto)
         {
@@ -72,10 +81,10 @@ namespace Operacoes.Controllers
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok(resultado);
         }
 
-        [HttpDelete("gasto")]
+        [HttpDelete("{id}")]
         [Authorize]
         public IActionResult DeletarGasto(int id)
         {
@@ -87,7 +96,7 @@ namespace Operacoes.Controllers
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok(resultado);
         }
 
         public static int ResgatarIdToken(string token)

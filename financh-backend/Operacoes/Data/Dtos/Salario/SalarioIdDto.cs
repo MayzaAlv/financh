@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Operacoes.Models
+namespace Operacoes.Data.Dtos.Salario
 {
-    public class Salario
+    public class SalarioIdDto
     {
-        [Key]
         public int Id { get; set; }
         [Required]
         public double SalarioFixo { get; set; }
@@ -14,7 +13,5 @@ namespace Operacoes.Models
         public double GanhoOcasional { get; set; }
         [Required]
         public DateTime DataSalario { get; set; }
-        [Required]
-        public int UsuarioId { get; set; }
     }
 }

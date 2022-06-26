@@ -17,35 +17,63 @@ namespace Operacoes.Services
             _mapper = mapper;
         }
 
-        public GastoDto AdicionarGasto(GastoDto gastoDto, int usuarioId)
+        public GastoIdDto AdicionarGasto(GastoDto gastoDto, int usuarioId)
         {
             Gasto gasto = _mapper.Map<Gasto>(gastoDto);
+            List<Gasto> gastoUsuario = _context.Gastos.Where(g => g.UsuarioId == usuarioId).ToList();
+            
+            foreach (Gasto _gasto in gastoUsuario)
+            {
+                if(_gasto.DataGasto.Month == gasto.DataGasto.Month 
+                    && _gasto.DataGasto.Year == gasto.DataGasto.Year)
+                {
+                    throw new Exception("Data de gasto existente no banco");
+                }
+            }
+
             gasto.UsuarioId = usuarioId;
             _context.Gastos.Add(gasto);
             _context.SaveChanges();
 
-            return gastoDto;
+            gasto = _context.Gastos.Where(gasto => gasto.UsuarioId == usuarioId)
+                                   .FirstOrDefault(g => g.DataGasto == gasto.DataGasto);
+
+            return _mapper.Map<GastoIdDto>(gasto);
         }
 
-        public List<GastoDto> MostrarGastoAtual(int usuarioId)
+        public GastoIdDto GastoPorId(int gastoId)
         {
-            List<Gasto> gastos = _context.Gastos.Where(gastoUsuario => gastoUsuario.UsuarioId == usuarioId)
-                                    .Where(g => g.DataGasto.Month == DateTime.Now.Month).ToList();
-            if (gastos != null)
+            Gasto gasto = _context.Gastos.FirstOrDefault(g => g.Id == gastoId);
+
+            if (gasto != null)
             {
-                return _mapper.Map<List<GastoDto>>(gastos);
+                GastoIdDto gastoDto = _mapper.Map<GastoIdDto>(gasto);
+
+                return gastoDto;
+            }
+            return null;
+        }
+
+        public GastoDto MostrarGastoAtual(int usuarioId)
+        {
+            Gasto gasto = _context.Gastos.Where(gastoUsuario => gastoUsuario.UsuarioId == usuarioId)
+                                        .FirstOrDefault(g => g.DataGasto.Month == DateTime.Now.Month);
+            if (gasto != null);
+            {
+                return _mapper.Map<GastoDto>(gasto);
             }
             return null;
         }
 
 
-        public List<GastoDto> MostrarGastoMes(int usuarioId, int data)
+        public GastoDto MostrarGastoMes(int usuarioId, int mes, int ano)
         {
-            List<Gasto> gastos = _context.Gastos.Where(gastoUsuario => gastoUsuario.UsuarioId == usuarioId)
-                                 .Where(g => g.DataGasto.Month == data).ToList();
-            if (gastos != null)
+            Gasto gasto = _context.Gastos.Where(gastoUsuario => gastoUsuario.UsuarioId == usuarioId)
+                                         .Where(gt => gt.DataGasto.Year == ano)
+                                         .FirstOrDefault(g => g.DataGasto.Month == mes);
+            if (gasto != null)
             {
-                return _mapper.Map<List<GastoDto>>(gastos);
+                return _mapper.Map<GastoDto>(gasto);
             }
             return null;
         }
@@ -53,7 +81,7 @@ namespace Operacoes.Services
         public Result AtualizarGasto(int id, int usuarioId, GastoDto gastoDto)
         {
             Gasto gasto = _context.Gastos.Where(gastoUsuario => gastoUsuario.UsuarioId == usuarioId)
-                                         .Where(g => g.Id == id).FirstOrDefault();
+                                         .FirstOrDefault(g => g.Id == id);
             if(gasto == null)
             {
                 return Result.Fail("Falha na procura");
@@ -66,7 +94,7 @@ namespace Operacoes.Services
         public Result DeletarGasto(int id, int usuarioId)
         {
             Gasto gasto = _context.Gastos.Where(gastoUsuario => gastoUsuario.UsuarioId == usuarioId)
-                                         .Where(g => g.Id == id).FirstOrDefault();
+                                         .FirstOrDefault(g => g.Id == id);
             if(gasto == null)
             {
                 return Result.Fail("Falha na procura");

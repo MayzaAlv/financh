@@ -9,6 +9,13 @@ namespace financh_backend.Services
 {
     public class TokenService
     {
+        private IConfiguration _configuration;
+
+        public TokenService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public Token CreateToken(CustomIdentityUser usuario)
         {
             Claim[] direitosUsuario = new Claim[]
@@ -16,9 +23,10 @@ namespace financh_backend.Services
                 new Claim("username", usuario.UserName),
                 new Claim("id", usuario.Id.ToString())
             };
+            string tokenKey = _configuration.GetValue<string>("TokenKey");
 
             var chave = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("0asdjas09djsa09djasdjsadajsd09asjd09sajcnzxn")
+                Encoding.UTF8.GetBytes(tokenKey)
                 );
 
             var credenciais = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);

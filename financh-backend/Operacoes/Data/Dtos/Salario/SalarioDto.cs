@@ -10,5 +10,7 @@ namespace Operacoes.Data.Dtos.Salario
         public double HoraExtra { get; set; }
         [Required]
         public double GanhoOcasional { get; set; }
+        [Required]
+        public DateTime DataSalario { get; set; }
     }
 }

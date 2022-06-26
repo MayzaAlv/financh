@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace financh_backend.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/v1/financh/cadastros")]
     [ApiController]
     public class CadastroController : ControllerBase
     {
@@ -18,17 +18,18 @@ namespace financh_backend.Controllers
             _cadastroService = cadastroService;
         }
 
-        [HttpPost]
+        [HttpPost("usuario")]
         public IActionResult CadastrarUsuario(CreateUsuarioDto createDto)
         {
             Result resultado = _cadastroService.CadastrarUsuario(createDto);
-            if (resultado.IsFailed) {
+            if (resultado.IsFailed) 
+            {
                 return StatusCode(500);
             }
             return Ok(resultado.Successes.ToList()[0].Message);
         }
 
-        [HttpGet("/Ativar")]
+        [HttpGet("ativar")]
         public IActionResult AtivarConta([FromQuery] AtivarContaRequest request)
         {
             Result resultado = _cadastroService.AtivarConta(request);

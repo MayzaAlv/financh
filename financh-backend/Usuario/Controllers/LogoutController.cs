@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace financh_backend.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/v1/financh/usuario")]
     [ApiController]
     public class LogoutController : ControllerBase
     {
@@ -15,7 +15,7 @@ namespace financh_backend.Controllers
             _logoutService = logoutService;
         }
 
-        [HttpPost]
+        [HttpPost("logout")]
         public IActionResult DeslogarUsuario()
         {
             Result resultado = _logoutService.DeslogarUsuario();

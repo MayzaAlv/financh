@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace financh_backend.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/v1/financh/usuario")]
     [ApiController]
     public class LoginController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace financh_backend.Controllers
             _loginService = loginService;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public IActionResult LogarUsuario(LoginRequest request)
         {
             Result resultado = _loginService.LogarUsuario(request);
@@ -27,7 +27,7 @@ namespace financh_backend.Controllers
             return Ok(resultado.Successes.ToList()[0].Message);
         }
 
-        [HttpPost("/Solicitar-Reset")]
+        [HttpPost("solicitar-reset")]
         public IActionResult SolicitarResetSenha(SolicitarSenhaResetRequest request)
         {
             Result resultado = _loginService.SolicitarResetSenha(request);
@@ -38,7 +38,7 @@ namespace financh_backend.Controllers
             return Ok(resultado.Successes.ToList()[0].Message);
         }
 
-        [HttpPost("/Reset-Senha")]
+        [HttpPost("reset-senha")]
         public IActionResult ResetSenha(ResetSenhaRequest request)
         {
             Result resultado = _loginService.ResetSenha(request);
